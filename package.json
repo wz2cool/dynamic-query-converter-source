@@ -1,0 +1,38 @@
+{
+  "name": "react-ts-starter-kit",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "webpack-dev-server --hot"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wz2cool/react-ts-starter-kit.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wz2cool/react-ts-starter-kit/issues"
+  },
+  "homepage": "https://github.com/wz2cool/react-ts-starter-kit#readme",
+  "devDependencies": {
+    "@types/react": "~16.3.14",
+    "@types/react-dom": "~16.0.5",
+    "awesome-typescript-loader": "~5.0.0",
+    "babel-core": "~6.26.3",
+    "babel-loader": "~7.1.4",
+    "babel-plugin-transform-class-properties": "~6.24.1",
+    "babel-preset-env": "~1.7.0",
+    "babel-preset-react": "~6.24.1",
+    "html-webpack-plugin": "~3.2.0",
+    "typescript": "~2.8.3",
+    "webpack": "~4.10.1",
+    "webpack-cli": "~2.1.4",
+    "webpack-dev-server": "~3.1.4"
+  },
+  "dependencies": {
+    "react": "~16.4.0",
+    "react-dom": "~16.4.0",
+    "react-router": "~4.2.0",
+    "react-hot-loader": "~4.2.0"
+  }
+}
