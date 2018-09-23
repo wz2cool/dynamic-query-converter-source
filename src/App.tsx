@@ -1,13 +1,12 @@
-import * as React from 'react'
-import { hot } from 'react-hot-loader'
-import Counter from './Counter'
+import * as React from "react";
+import { hot } from "react-hot-loader";
+import Counter from "./Counter";
 
 const App = () => (
-  <h1>
-    Hello, world!<br />
-    You can update this text, and it will work
+  <div>
+    <h1>动态查询转化器</h1>
     <Counter />
-  </h1>
-)
+  </div>
+);
 
-export default hot(module)(App)
+export default hot(module)(App);
