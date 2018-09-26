@@ -9,6 +9,12 @@ module.exports = {
     path: path.join(__dirname, "dist"),
     filename: "bundle.js"
   },
+  externals: {
+    react: "React",
+    "react-dom": "ReactDOM",
+    antd: "antd",
+    moment: "moment"
+  },
   module: {
     rules: [
       {
@@ -24,5 +30,11 @@ module.exports = {
   resolve: {
     extensions: [".ts", ".tsx", ".js", ".jsx"]
   },
-  plugins: [new HtmlWebpackPlugin(), new webpack.NamedModulesPlugin()]
+  plugins: [
+    new HtmlWebpackPlugin({
+      filename: "index.html",
+      template: "./src/index.html"
+    }),
+    new webpack.NamedModulesPlugin()
+  ]
 };

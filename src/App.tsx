@@ -1,12 +1,11 @@
 import * as React from "react";
 import { hot } from "react-hot-loader";
-import Counter from "./Counter";
-import "antd/dist/antd.css";
+import Converter from "./Converter";
+import "./App.css";
 
 const App = () => (
-  <div>
-    <h1>动态查询转化器</h1>
-    <Counter />
+  <div className="root">
+    <Converter />
   </div>
 );
 
