@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Button } from "antd";
 
 class Counter extends React.Component<{}, { count: number }> {
   interval: number;
@@ -31,9 +32,13 @@ class Counter extends React.Component<{}, { count: number }> {
 
   render() {
     return (
-      <span>
-        {this.state.count} - {this.generateString1()} - {this.generateString2()}
-      </span>
+      <div>
+        <Button type="primary">Button</Button>
+        <span>
+          {this.state.count} - {this.generateString1()} -{" "}
+          {this.generateString2()}
+        </span>
+      </div>
     );
   }
 }

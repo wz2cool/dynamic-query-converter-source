@@ -1,24 +1,28 @@
 /* eslint-disable */
-const path = require('path')
-const webpack = require('webpack')
-const HtmlWebpackPlugin = require('html-webpack-plugin')
+const path = require("path");
+const webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
-  entry: ['./src/index'],
+  entry: ["./src/index"],
   output: {
-    path: path.join(__dirname, 'dist'),
-    filename: 'bundle.js',
+    path: path.join(__dirname, "dist"),
+    filename: "bundle.js"
   },
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: ['awesome-typescript-loader'],
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"]
       },
-    ],
+      {
+        test: /\.tsx?$/,
+        use: ["awesome-typescript-loader"]
+      }
+    ]
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+    extensions: [".ts", ".tsx", ".js", ".jsx"]
   },
-  plugins: [new HtmlWebpackPlugin(), new webpack.NamedModulesPlugin()],
-}
+  plugins: [new HtmlWebpackPlugin(), new webpack.NamedModulesPlugin()]
+};

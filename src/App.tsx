@@ -1,6 +1,7 @@
 import * as React from "react";
 import { hot } from "react-hot-loader";
 import Counter from "./Counter";
+import "antd/dist/antd.css";
 
 const App = () => (
   <div>
