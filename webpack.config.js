@@ -4,6 +4,7 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
+  mode: process.env.NODE_ENV,
   entry: ["./src/index"],
   output: {
     path: path.join(__dirname, "dist"),
