@@ -1,19 +1,25 @@
 import * as React from "react";
-import { Layout } from "antd";
+import { Row, Col, Input, Layout } from "antd";
+const { Header, Content } = Layout;
 
-const { Header, Footer, Sider, Content } = Layout;
+const { TextArea } = Input;
 
 class Converter extends React.Component {
   render() {
     return (
-      <Layout>
-        <Header>Header</Header>
-        <Layout>
-          <Content>Content11111111</Content>
-          <Sider>Sider</Sider>
-        </Layout>
-        <Footer>Footer</Footer>
-      </Layout>
+      <Row style={{ height: "100%" }}>
+        <Col span={12} style={{ height: "100%" }}>
+          <Layout style={{ height: "100%" }}>
+            <Header />
+            <Content>
+              <TextArea style={{ height: "100%" }} />
+            </Content>
+          </Layout>
+        </Col>
+        <Col span={12} style={{ height: "100%" }}>
+          col-12
+        </Col>
+      </Row>
     );
   }
 }

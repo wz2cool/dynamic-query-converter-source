@@ -38,6 +38,9 @@
     "react": "~16.4.0",
     "react-dom": "~16.4.0",
     "react-hot-loader": "~4.2.0",
-    "react-router": "~4.2.0"
+    "react-router": "~4.2.0",
+    "ts-commons": "^1.0.3",
+    "ts-dynamic-query": "^1.0.28",
+    "tsbatis": "^0.2.30"
   }
 }
