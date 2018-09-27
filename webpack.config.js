@@ -7,14 +7,17 @@ module.exports = {
   mode: process.env.NODE_ENV,
   entry: ["./src/index"],
   output: {
-    path: path.join(__dirname, "dist"),
-    filename: "bundle.js"
+    path: path.resolve(__dirname, "dist"),
+    filename: "[name]-[hash].js",
+    chunkFilename: "[name]-[chunkhash].js",
+    globalObject: "this"
   },
   externals: {
     react: "React",
     "react-dom": "ReactDOM",
     antd: "antd",
-    moment: "moment"
+    moment: "moment",
+    lodash: "_"
   },
   module: {
     rules: [
