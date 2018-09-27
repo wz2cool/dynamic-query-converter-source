@@ -55,15 +55,6 @@ class Converter extends React.Component<{}, ConverterState> {
           <Tabs defaultActiveKey="1">
             <TabPane tab="JSON Tree" key="1">
               <Tree>
-                {/* <TreeNode title="parent 1" key="0-0">
-                  <TreeNode title="parent 1-0" key="0-0-0">
-                    <TreeNode title="leaf" key="0-0-0-0" />
-                    <TreeNode title="leaf" key="0-0-0-1" />
-                  </TreeNode>
-                  <TreeNode title="parent 1-1" key="0-0-1">
-                    <TreeNode title="sss" key="0-0-1-0" />
-                  </TreeNode>
-                </TreeNode> */}
                 {this.renderNode(this.state.treeNodes)}
               </Tree>
             </TabPane>
@@ -142,19 +133,19 @@ class Converter extends React.Component<{}, ConverterState> {
       filterDescriptorNode.children = [];
 
       const conditionNode = new TreeNodeModel();
-      conditionNode.title = FilterCondition[filter.condition];
+      conditionNode.title = `condition: ${FilterCondition[filter.condition]}`;
       conditionNode.key = StringUtils.newGuid();
       const propertyPathNode = new TreeNodeModel();
-      propertyPathNode.title = filter.propertyPath;
+      propertyPathNode.title = `propertyPath: ${filter.propertyPath}`;
       propertyPathNode.key = StringUtils.newGuid();
       const operatorNode = new TreeNodeModel();
-      operatorNode.title = FilterOperator[filter.operator];
+      operatorNode.title = `operator: ${FilterOperator[filter.operator]}`;
       operatorNode.key = StringUtils.newGuid();
       const valueNode = new TreeNodeModel();
-      valueNode.title = filter.value.toString();
+      valueNode.title = `value: ${filter.value.toString()}`;
       valueNode.key = StringUtils.newGuid();
       const ignoreCaseNode = new TreeNodeModel();
-      ignoreCaseNode.title = filter.ignoreCase.toString();
+      ignoreCaseNode.title = `ignoreCase: ${filter.ignoreCase.toString()}`;
       ignoreCaseNode.key = StringUtils.newGuid();
       filterDescriptorNode.children.push(conditionNode);
       filterDescriptorNode.children.push(propertyPathNode);
@@ -169,7 +160,7 @@ class Converter extends React.Component<{}, ConverterState> {
       filterGroupDescriptor.children = [];
 
       const conditionNode = new TreeNodeModel();
-      conditionNode.title = FilterCondition[filter.condition];
+      conditionNode.title = `condition: ${FilterCondition[filter.condition]}`;
       conditionNode.key = StringUtils.newGuid();
       filterGroupDescriptor.children.push(conditionNode);
 
