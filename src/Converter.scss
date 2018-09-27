@@ -1,0 +1,33 @@
+.converter {
+  height: 100%;
+  width: 100%;
+
+  .left-area {
+    width: 50%;
+    height: 100%;
+    float: left;
+    position: relative;
+
+    .header {
+      height: 50px;
+    }
+
+    .content {
+      position: absolute;
+      top: 50px;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    .input-query {
+      height: 100%;
+    }
+  }
+
+  .right-area {
+    width: 50%;
+    height: 100%;
+    float: right;
+  }
+}
