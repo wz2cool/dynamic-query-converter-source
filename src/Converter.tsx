@@ -54,9 +54,7 @@ class Converter extends React.Component<{}, ConverterState> {
         <div className="right-area">
           <Tabs defaultActiveKey="1">
             <TabPane tab="JSON Tree" key="1">
-              <Tree>
-                {this.renderNode(this.state.treeNodes)}
-              </Tree>
+              <Tree>{this.renderNode(this.state.treeNodes)}</Tree>
             </TabPane>
             <TabPane tab="Tab 2" key="2">
               Content of Tab Pane 2
@@ -128,24 +126,55 @@ class Converter extends React.Component<{}, ConverterState> {
     let result: TreeNodeModel = undefined;
     if (filter instanceof FilterDescriptor) {
       const filterDescriptorNode = new TreeNodeModel();
-      filterDescriptorNode.title = "FilterDescriptor";
+      filterDescriptorNode.title = (
+        <span className="tree-title">FilterDescriptor</span>
+      );
       filterDescriptorNode.key = StringUtils.newGuid();
       filterDescriptorNode.children = [];
 
       const conditionNode = new TreeNodeModel();
-      conditionNode.title = `condition: ${FilterCondition[filter.condition]}`;
+      conditionNode.title = (
+        <span>
+          <span className="tree-title">condition: </span>
+          <span className="tree-content">
+            {FilterCondition[filter.condition]}
+          </span>
+        </span>
+      );
       conditionNode.key = StringUtils.newGuid();
       const propertyPathNode = new TreeNodeModel();
-      propertyPathNode.title = `propertyPath: ${filter.propertyPath}`;
+      propertyPathNode.title = (
+        <span>
+          <span className="tree-title">propertyPath: </span>
+          <span className="tree-content">{filter.propertyPath}</span>
+        </span>
+      );
       propertyPathNode.key = StringUtils.newGuid();
       const operatorNode = new TreeNodeModel();
-      operatorNode.title = `operator: ${FilterOperator[filter.operator]}`;
+      operatorNode.title = (
+        <span>
+          <span className="tree-title">operator: </span>
+          <span className="tree-content">
+            {FilterOperator[filter.operator]}
+          </span>
+        </span>
+      );
       operatorNode.key = StringUtils.newGuid();
       const valueNode = new TreeNodeModel();
-      valueNode.title = `value: ${filter.value.toString()}`;
+      valueNode.title = (
+        <span>
+          <span className="tree-title">value: </span>
+          <span className="tree-content">{filter.value.toString()}</span>
+        </span>
+      );
       valueNode.key = StringUtils.newGuid();
       const ignoreCaseNode = new TreeNodeModel();
-      ignoreCaseNode.title = `ignoreCase: ${filter.ignoreCase.toString()}`;
+      ignoreCaseNode.title = (
+        <span>
+          <span className="tree-title">ignoreCase: </span>
+          <span className="tree-content">{filter.ignoreCase.toString()}</span>
+        </span>
+      );
       ignoreCaseNode.key = StringUtils.newGuid();
       filterDescriptorNode.children.push(conditionNode);
       filterDescriptorNode.children.push(propertyPathNode);
@@ -155,18 +184,31 @@ class Converter extends React.Component<{}, ConverterState> {
       result = filterDescriptorNode;
     } else if (filter instanceof FilterGroupDescriptor) {
       const filterGroupDescriptor = new TreeNodeModel();
-      filterGroupDescriptor.title = "FilterGroupDescriptor";
+      filterGroupDescriptor.title = (
+        <span className="tree-title">FilterGroupDescriptor</span>
+      );
       filterGroupDescriptor.key = StringUtils.newGuid();
       filterGroupDescriptor.children = [];
 
       const conditionNode = new TreeNodeModel();
-      conditionNode.title = `condition: ${FilterCondition[filter.condition]}`;
+      conditionNode.title = (
+        <span>
+          <span className="tree-title">condition: </span>
+          <span className="tree-content">
+            {FilterCondition[filter.condition]}
+          </span>
+        </span>
+      );
       conditionNode.key = StringUtils.newGuid();
       filterGroupDescriptor.children.push(conditionNode);
 
       if (!ArrayUtils.isEmpty(filter.filters)) {
         const filtersNode = new TreeNodeModel();
-        filtersNode.title = this.getPropertyOfFilterGroupDescriptor("filters");
+        filtersNode.title = (
+          <span className="tree-title">
+            {this.getPropertyOfFilterGroupDescriptor("filters")}
+          </span>
+        );
         filtersNode.key = StringUtils.newGuid();
         filtersNode.children = _.map(filter.filters, x =>
           this.generateTreeNodesByFilter(x)
