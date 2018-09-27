@@ -1,6 +1,15 @@
 import * as React from "react";
+import * as _ from "lodash";
 import { Button, Input, Tabs, Tree, message } from "antd";
-import { DynamicQuery, FilterDescriptorBase } from "ts-dynamic-query";
+import {
+  DynamicQuery,
+  FilterDescriptorBase,
+  FilterDescriptor,
+  SortDescriptor,
+  FilterCondition,
+  FilterOperator,
+  FilterGroupDescriptor
+} from "ts-dynamic-query";
 import { ObjectUtils, StringUtils, ArrayUtils } from "ts-commons";
 
 const { TextArea } = Input;
@@ -103,30 +112,100 @@ class Converter extends React.Component<{}, ConverterState> {
       return [];
     }
     const result: TreeNodeModel[] = [];
-    const filterNode = new TreeNodeModel();
-    filterNode.title = "filters";
-    filterNode.key = StringUtils.newGuid();
+    if (!ArrayUtils.isEmpty(dynamicQuery.filters)) {
+      const filterNode = new TreeNodeModel();
+      filterNode.title = this.getPropertyOfDynamicQuery("filters");
+      filterNode.key = StringUtils.newGuid();
+      filterNode.children = _.map(dynamicQuery.filters, x =>
+        this.generateTreeNodesByFilter(x)
+      );
+      result.push(filterNode);
+    }
+
     const sortNode = new TreeNodeModel();
-    sortNode.title = "sorts";
+    sortNode.title = this.getPropertyOfDynamicQuery("sorts");
     sortNode.key = StringUtils.newGuid();
 
-    result.push(filterNode);
     result.push(sortNode);
 
     return result;
   }
 
-  private generateFilterTreeNodes(
-    filters: FilterDescriptorBase[]
-  ): TreeNodeModel[] {
-    if (ArrayUtils.isEmpty(filters)) {
-      return [];
+  private generateTreeNodesByFilter(
+    filter: FilterDescriptorBase
+  ): TreeNodeModel {
+    let result: TreeNodeModel = undefined;
+    if (filter instanceof FilterDescriptor) {
+      const filterDescriptorNode = new TreeNodeModel();
+      filterDescriptorNode.title = "FilterDescriptor";
+      filterDescriptorNode.key = StringUtils.newGuid();
+      filterDescriptorNode.children = [];
+
+      const conditionNode = new TreeNodeModel();
+      conditionNode.title = FilterCondition[filter.condition];
+      conditionNode.key = StringUtils.newGuid();
+      const propertyPathNode = new TreeNodeModel();
+      propertyPathNode.title = filter.propertyPath;
+      propertyPathNode.key = StringUtils.newGuid();
+      const operatorNode = new TreeNodeModel();
+      operatorNode.title = FilterOperator[filter.operator];
+      operatorNode.key = StringUtils.newGuid();
+      const valueNode = new TreeNodeModel();
+      valueNode.title = filter.value.toString();
+      valueNode.key = StringUtils.newGuid();
+      const ignoreCaseNode = new TreeNodeModel();
+      ignoreCaseNode.title = filter.ignoreCase.toString();
+      ignoreCaseNode.key = StringUtils.newGuid();
+      filterDescriptorNode.children.push(conditionNode);
+      filterDescriptorNode.children.push(propertyPathNode);
+      filterDescriptorNode.children.push(operatorNode);
+      filterDescriptorNode.children.push(valueNode);
+      filterDescriptorNode.children.push(ignoreCaseNode);
+      result = filterDescriptorNode;
+    } else if (filter instanceof FilterGroupDescriptor) {
+      const filterGroupDescriptor = new TreeNodeModel();
+      filterGroupDescriptor.title = "FilterGroupDescriptor";
+      filterGroupDescriptor.key = StringUtils.newGuid();
+      filterGroupDescriptor.children = [];
+
+      const conditionNode = new TreeNodeModel();
+      conditionNode.title = FilterCondition[filter.condition];
+      conditionNode.key = StringUtils.newGuid();
+      filterGroupDescriptor.children.push(conditionNode);
+
+      if (!ArrayUtils.isEmpty(filter.filters)) {
+        const filtersNode = new TreeNodeModel();
+        filtersNode.title = this.getPropertyOfFilterGroupDescriptor("filters");
+        filtersNode.key = StringUtils.newGuid();
+        filtersNode.children = _.map(filter.filters, x =>
+          this.generateTreeNodesByFilter(x)
+        );
+        filterGroupDescriptor.children.push(filtersNode);
+      }
+      result = filterGroupDescriptor;
     }
 
-    const result:  TreeNodeModel[] = []
-    for(const filter of filters){
-      const node = new TreeNodeModel();
-    }
+    return result;
+  }
+
+  private getPropertyOfDynamicQuery(key: keyof DynamicQuery<any>): string {
+    return key.toString();
+  }
+
+  private getPropertyOfFilterDescriptor(
+    key: keyof FilterDescriptor<any>
+  ): string {
+    return key.toString();
+  }
+
+  private getPropertyOfFilterGroupDescriptor(
+    key: keyof FilterGroupDescriptor<any>
+  ): string {
+    return key.toString();
+  }
+
+  private getPropertyOfSortDescriptor(key: keyof SortDescriptor<any>): string {
+    return key.toString();
   }
 }
 export default Converter;
