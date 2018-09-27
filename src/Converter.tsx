@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Button, Input, Tabs, Tree, message } from "antd";
-import { DynamicQuery } from "ts-dynamic-query";
+import { DynamicQuery, FilterDescriptorBase } from "ts-dynamic-query";
 import { ObjectUtils, StringUtils, ArrayUtils } from "ts-commons";
 
 const { TextArea } = Input;
@@ -109,10 +109,24 @@ class Converter extends React.Component<{}, ConverterState> {
     const sortNode = new TreeNodeModel();
     sortNode.title = "sorts";
     sortNode.key = StringUtils.newGuid();
+
     result.push(filterNode);
     result.push(sortNode);
 
     return result;
+  }
+
+  private generateFilterTreeNodes(
+    filters: FilterDescriptorBase[]
+  ): TreeNodeModel[] {
+    if (ArrayUtils.isEmpty(filters)) {
+      return [];
+    }
+
+    const result:  TreeNodeModel[] = []
+    for(const filter of filters){
+      const node = new TreeNodeModel();
+    }
   }
 }
 export default Converter;
