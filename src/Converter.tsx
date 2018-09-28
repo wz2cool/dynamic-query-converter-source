@@ -23,7 +23,8 @@ import { TreeNodeModel } from "./model/TreeNodeModel";
 
 interface ConverterState {
   inputQueryValue: string;
-  treeNodes: TreeNodeModel[];
+  jsonTreeNodes: TreeNodeModel[];
+  expressionTreeNodes: TreeNodeModel[];
 }
 
 class Converter extends React.Component<{}, ConverterState> {
@@ -50,7 +51,8 @@ class Converter extends React.Component<{}, ConverterState> {
         ]
       }
       `,
-      treeNodes: []
+      jsonTreeNodes: [],
+      expressionTreeNodes: []
     };
   }
 
@@ -59,7 +61,11 @@ class Converter extends React.Component<{}, ConverterState> {
       <div className="converter">
         <div className="left-area">
           <div className="header">
-            <Button type="primary" onClick={() => this.convert()}>
+            <Button
+              type="primary"
+              onClick={() => this.convert()}
+              style={{ margin: "10px" }}
+            >
               Convert
             </Button>
           </div>
@@ -74,14 +80,13 @@ class Converter extends React.Component<{}, ConverterState> {
         </div>
         <div className="right-area">
           <Tabs defaultActiveKey="1">
-            <TabPane tab="JSON Tree" key="1">
-              <Tree>{this.renderNode(this.state.treeNodes)}</Tree>
+            <TabPane tab="Expression Tree" key="1">
+              <Tree>{this.renderNode(this.state.expressionTreeNodes)}</Tree>
             </TabPane>
-            <TabPane tab="Tab 2" key="2">
-              Content of Tab Pane 2
+            <TabPane tab="JSON Tree" key="2">
+              <Tree>{this.renderNode(this.state.jsonTreeNodes)}</Tree>
             </TabPane>
           </Tabs>
-          ,
         </div>
       </div>
     );
@@ -107,17 +112,23 @@ class Converter extends React.Component<{}, ConverterState> {
     try {
       const query = this.state.inputQueryValue;
       const dynamicQuery = DynamicQuery.createInstance().fromJSON(query);
-      const treeNodes = this.generateTreeNodes(dynamicQuery);
-      console.log(treeNodes);
+      const jsonTreeNodes = this.generateJSONTreeNodes(dynamicQuery);
+      const expressionTreeNodes = this.generateExpressionTreeNodes(
+        dynamicQuery
+      );
       this.setState({
-        treeNodes: treeNodes
+        jsonTreeNodes: jsonTreeNodes,
+        expressionTreeNodes: expressionTreeNodes
       });
     } catch (e) {
       message.error("Can't convert current query json.");
     }
   }
 
-  private generateTreeNodes(dynamicQuery: DynamicQuery<any>): TreeNodeModel[] {
+  //#region JSON Tree
+  private generateJSONTreeNodes(
+    dynamicQuery: DynamicQuery<any>
+  ): TreeNodeModel[] {
     if (ObjectUtils.isNullOrUndefined(dynamicQuery)) {
       return [];
     }
@@ -132,7 +143,7 @@ class Converter extends React.Component<{}, ConverterState> {
       filterNode.key = StringUtils.newGuid();
       filterNode.children = _.map(
         dynamicQuery.filters,
-        (x: FilterDescriptorBase) => this.generateTreeNodesByFilter(x)
+        (x: FilterDescriptorBase) => this.generateJSONTreeNodesByFilter(x)
       );
       result.push(filterNode);
     }
@@ -145,14 +156,14 @@ class Converter extends React.Component<{}, ConverterState> {
     );
     sortNode.key = StringUtils.newGuid();
     sortNode.children = _.map(dynamicQuery.sorts, (x: SortDescriptorBase) =>
-      this.generateTreeNodesBySort(x)
+      this.generateJSONTreeNodesBySort(x)
     );
     result.push(sortNode);
 
     return result;
   }
 
-  private generateTreeNodesByFilter(
+  private generateJSONTreeNodesByFilter(
     filter: FilterDescriptorBase
   ): TreeNodeModel {
     let result: TreeNodeModel = undefined;
@@ -256,7 +267,7 @@ class Converter extends React.Component<{}, ConverterState> {
         filtersNode.key = StringUtils.newGuid();
         filtersNode.children = _.map(
           filter.filters,
-          (x: FilterDescriptorBase) => this.generateTreeNodesByFilter(x)
+          (x: FilterDescriptorBase) => this.generateJSONTreeNodesByFilter(x)
         );
         filterGroupDescriptor.children.push(filtersNode);
       }
@@ -266,7 +277,7 @@ class Converter extends React.Component<{}, ConverterState> {
     return result;
   }
 
-  private generateTreeNodesBySort(sort: SortDescriptorBase): TreeNodeModel {
+  private generateJSONTreeNodesBySort(sort: SortDescriptorBase): TreeNodeModel {
     let result: TreeNodeModel = undefined;
     if (sort instanceof SortDescriptor) {
       const sortDescriptorNode = new TreeNodeModel();
@@ -321,5 +332,116 @@ class Converter extends React.Component<{}, ConverterState> {
   private getPropertyOfSortDescriptor(key: keyof SortDescriptor<any>): string {
     return key.toString();
   }
+
+  //#endregion
+
+  //#region Expression Tree
+  private generateExpressionTreeNodes(
+    dynamicQuery: DynamicQuery<any>
+  ): TreeNodeModel[] {
+    if (ObjectUtils.isNullOrUndefined(dynamicQuery)) {
+      return [];
+    }
+    const result: TreeNodeModel[] = [];
+    if (!ArrayUtils.isEmpty(dynamicQuery.filters)) {
+      const filterNode = new TreeNodeModel();
+      filterNode.title = (
+        <span className="tree-title">
+          {this.getPropertyOfDynamicQuery("filters")}
+        </span>
+      );
+      filterNode.key = StringUtils.newGuid();
+      filterNode.children = _.map(
+        dynamicQuery.filters,
+        (x: FilterDescriptorBase) => this.generateExpressionTreeNodesByFilter(x)
+      );
+      result.push(filterNode);
+    }
+
+    const sortNode = new TreeNodeModel();
+    sortNode.title = (
+      <span className="tree-title">
+        {this.getPropertyOfDynamicQuery("sorts")}
+      </span>
+    );
+    sortNode.key = StringUtils.newGuid();
+    sortNode.children = _.map(dynamicQuery.sorts, (x: SortDescriptorBase) =>
+      this.generateExpressionTreeNodesBySort(x)
+    );
+    result.push(sortNode);
+
+    return result;
+  }
+
+  private generateExpressionTreeNodesByFilter(
+    filter: FilterDescriptorBase
+  ): TreeNodeModel {
+    let result: TreeNodeModel = undefined;
+    if (filter instanceof FilterDescriptor) {
+      const filterDescriptorNode = new TreeNodeModel();
+      filterDescriptorNode.title = (
+        <span>
+          <span className="expression-condition">
+            {FilterCondition[filter.condition]}
+          </span>
+          <span>&nbsp;&nbsp;&nbsp;</span>
+          <span className="expression-prop">{filter.propertyPath}</span>
+          <span>&nbsp;&nbsp;&nbsp;</span>
+          <span className="expression-operator">
+            {FilterOperator[filter.operator]}
+          </span>
+          <span>&nbsp;&nbsp;&nbsp;</span>
+          <span className="expression-value">{filter.value.toString()}</span>
+        </span>
+      );
+      filterDescriptorNode.key = StringUtils.newGuid();
+      result = filterDescriptorNode;
+    } else if (filter instanceof FilterGroupDescriptor) {
+      const filterGroupDescriptorNode = new TreeNodeModel();
+      filterGroupDescriptorNode.key = StringUtils.newGuid();
+      filterGroupDescriptorNode.title = (
+        <span>
+          <span className="expression-condition">
+            {FilterCondition[filter.condition]}
+          </span>
+          <span> </span>
+          <span>&lt;group&gt;</span>
+        </span>
+      );
+
+      if (!ArrayUtils.isEmpty(filter.filters)) {
+        filterGroupDescriptorNode.children = _.map(
+          filter.filters,
+          (x: FilterDescriptorBase) =>
+            this.generateExpressionTreeNodesByFilter(x)
+        );
+      }
+      result = filterGroupDescriptorNode;
+    }
+    return result;
+  }
+
+  private generateExpressionTreeNodesBySort(
+    sort: SortDescriptorBase
+  ): TreeNodeModel {
+    let result: TreeNodeModel = undefined;
+    if (sort instanceof SortDescriptor) {
+      const sortDescriptorNode = new TreeNodeModel();
+      sortDescriptorNode.title = (
+        <span>
+          <span className="expression-prop">{sort.propertyPath}</span>
+          <span>&nbsp;&nbsp;&nbsp;</span>
+          <span className="expression-operator">
+            {SortDirection[sort.direction]}
+          </span>
+        </span>
+      );
+      sortDescriptorNode.key = StringUtils.newGuid();
+      result = sortDescriptorNode;
+    }
+    return result;
+  }
+
+  //#endregion
 }
 export default Converter;
