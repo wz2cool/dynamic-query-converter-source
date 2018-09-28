@@ -105,8 +105,9 @@ class Converter extends React.Component<{}, ConverterState> {
       const filterNode = new TreeNodeModel();
       filterNode.title = this.getPropertyOfDynamicQuery("filters");
       filterNode.key = StringUtils.newGuid();
-      filterNode.children = _.map(dynamicQuery.filters, x =>
-        this.generateTreeNodesByFilter(x)
+      filterNode.children = _.map(
+        dynamicQuery.filters,
+        (x: FilterDescriptorBase) => this.generateTreeNodesByFilter(x)
       );
       result.push(filterNode);
     }
@@ -210,8 +211,9 @@ class Converter extends React.Component<{}, ConverterState> {
           </span>
         );
         filtersNode.key = StringUtils.newGuid();
-        filtersNode.children = _.map(filter.filters, x =>
-          this.generateTreeNodesByFilter(x)
+        filtersNode.children = _.map(
+          filter.filters,
+          (x: FilterDescriptorBase) => this.generateTreeNodesByFilter(x)
         );
         filterGroupDescriptor.children.push(filtersNode);
       }

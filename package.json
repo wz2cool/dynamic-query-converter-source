@@ -45,7 +45,7 @@
     "react-hot-loader": "~4.2.0",
     "react-router": "~4.2.0",
     "ts-commons": "^1.0.3",
-    "ts-dynamic-query": "^1.0.28",
+    "ts-dynamic-query": "^1.0.29",
     "tsbatis": "^0.2.30"
   }
 }
