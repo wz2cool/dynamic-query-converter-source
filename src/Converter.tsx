@@ -8,7 +8,9 @@ import {
   SortDescriptor,
   FilterCondition,
   FilterOperator,
-  FilterGroupDescriptor
+  FilterGroupDescriptor,
+  SortDescriptorBase,
+  SortDirection
 } from "ts-dynamic-query";
 import { ObjectUtils, StringUtils, ArrayUtils } from "ts-commons";
 
@@ -103,7 +105,11 @@ class Converter extends React.Component<{}, ConverterState> {
     const result: TreeNodeModel[] = [];
     if (!ArrayUtils.isEmpty(dynamicQuery.filters)) {
       const filterNode = new TreeNodeModel();
-      filterNode.title = this.getPropertyOfDynamicQuery("filters");
+      filterNode.title = (
+        <span className="tree-title">
+          {this.getPropertyOfDynamicQuery("filters")}
+        </span>
+      );
       filterNode.key = StringUtils.newGuid();
       filterNode.children = _.map(
         dynamicQuery.filters,
@@ -113,9 +119,15 @@ class Converter extends React.Component<{}, ConverterState> {
     }
 
     const sortNode = new TreeNodeModel();
-    sortNode.title = this.getPropertyOfDynamicQuery("sorts");
+    sortNode.title = (
+      <span className="tree-title">
+        {this.getPropertyOfDynamicQuery("sorts")}
+      </span>
+    );
     sortNode.key = StringUtils.newGuid();
-
+    sortNode.children = _.map(dynamicQuery.sorts, (x: SortDescriptorBase) =>
+      this.generateTreeNodesBySort(x)
+    );
     result.push(sortNode);
 
     return result;
@@ -136,7 +148,9 @@ class Converter extends React.Component<{}, ConverterState> {
       const conditionNode = new TreeNodeModel();
       conditionNode.title = (
         <span>
-          <span className="tree-title">condition: </span>
+          <span className="tree-title">
+            {this.getPropertyOfFilterDescriptor("condition")}:{" "}
+          </span>
           <span className="tree-content">
             {FilterCondition[filter.condition]}
           </span>
@@ -146,7 +160,9 @@ class Converter extends React.Component<{}, ConverterState> {
       const propertyPathNode = new TreeNodeModel();
       propertyPathNode.title = (
         <span>
-          <span className="tree-title">propertyPath: </span>
+          <span className="tree-title">
+            {this.getPropertyOfFilterDescriptor("propertyPath")}:{" "}
+          </span>
           <span className="tree-content">{filter.propertyPath}</span>
         </span>
       );
@@ -154,7 +170,9 @@ class Converter extends React.Component<{}, ConverterState> {
       const operatorNode = new TreeNodeModel();
       operatorNode.title = (
         <span>
-          <span className="tree-title">operator: </span>
+          <span className="tree-title">
+            {this.getPropertyOfFilterDescriptor("operator")}:{" "}
+          </span>
           <span className="tree-content">
             {FilterOperator[filter.operator]}
           </span>
@@ -164,7 +182,9 @@ class Converter extends React.Component<{}, ConverterState> {
       const valueNode = new TreeNodeModel();
       valueNode.title = (
         <span>
-          <span className="tree-title">value: </span>
+          <span className="tree-title">
+            {this.getPropertyOfFilterDescriptor("value")}:{" "}
+          </span>
           <span className="tree-content">{filter.value.toString()}</span>
         </span>
       );
@@ -172,7 +192,9 @@ class Converter extends React.Component<{}, ConverterState> {
       const ignoreCaseNode = new TreeNodeModel();
       ignoreCaseNode.title = (
         <span>
-          <span className="tree-title">ignoreCase: </span>
+          <span className="tree-title">
+            {this.getPropertyOfFilterDescriptor("ignoreCase")}:{" "}
+          </span>
           <span className="tree-content">{filter.ignoreCase.toString()}</span>
         </span>
       );
@@ -194,7 +216,9 @@ class Converter extends React.Component<{}, ConverterState> {
       const conditionNode = new TreeNodeModel();
       conditionNode.title = (
         <span>
-          <span className="tree-title">condition: </span>
+          <span className="tree-title">
+            {this.getPropertyOfFilterGroupDescriptor("condition")}:{" "}
+          </span>
           <span className="tree-content">
             {FilterCondition[filter.condition]}
           </span>
@@ -220,6 +244,42 @@ class Converter extends React.Component<{}, ConverterState> {
       result = filterGroupDescriptor;
     }
 
+    return result;
+  }
+
+  private generateTreeNodesBySort(sort: SortDescriptorBase): TreeNodeModel {
+    let result: TreeNodeModel = undefined;
+    if (sort instanceof SortDescriptor) {
+      const sortDescriptorNode = new TreeNodeModel();
+      sortDescriptorNode.title = (
+        <span className="tree-title">SortDescriptor</span>
+      );
+      sortDescriptorNode.key = StringUtils.newGuid();
+      sortDescriptorNode.children = [];
+      const propertyPathNode = new TreeNodeModel();
+      propertyPathNode.title = (
+        <span>
+          <span className="tree-title">
+            {this.getPropertyOfSortDescriptor("propertyPath")}:{" "}
+          </span>
+          <span className="tree-content">{sort.propertyPath}</span>
+        </span>
+      );
+      propertyPathNode.key = StringUtils.newGuid();
+      const directionNode = new TreeNodeModel();
+      directionNode.title = (
+        <span>
+          <span className="tree-title">
+            {this.getPropertyOfSortDescriptor("direction")}:{" "}
+          </span>
+          <span className="tree-content">{SortDirection[sort.direction]}</span>
+        </span>
+      );
+      directionNode.key = StringUtils.newGuid();
+      sortDescriptorNode.children.push(propertyPathNode);
+      sortDescriptorNode.children.push(directionNode);
+      result = sortDescriptorNode;
+    }
     return result;
   }
 
