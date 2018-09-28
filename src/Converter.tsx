@@ -30,7 +30,26 @@ class Converter extends React.Component<{}, ConverterState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      inputQueryValue: "",
+      inputQueryValue: `{
+        "filters": [
+          {
+            "condition": 0,
+            "type": "FilterDescriptor",
+            "operator": 5,
+            "propertyPath": "age",
+            "ignoreCase": false,
+            "value": 20
+          }
+        ],
+        "sorts": [
+          {
+            "direction": 1,
+            "type": "SortDescriptor",
+            "propertyPath": "age"
+          }
+        ]
+      }
+      `,
       treeNodes: []
     };
   }
