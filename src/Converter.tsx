@@ -31,26 +31,7 @@ class Converter extends React.Component<{}, ConverterState> {
   constructor(props: any) {
     super(props);
     this.state = {
-      inputQueryValue: `{
-        "filters": [
-          {
-            "condition": 0,
-            "type": "FilterDescriptor",
-            "operator": 5,
-            "propertyPath": "age",
-            "ignoreCase": false,
-            "value": 20
-          }
-        ],
-        "sorts": [
-          {
-            "direction": 1,
-            "type": "SortDescriptor",
-            "propertyPath": "age"
-          }
-        ]
-      }
-      `,
+      inputQueryValue: `{"filters":[{"condition":0,"type":"FilterGroupDescriptor","filters":[{"condition":1,"type":"FilterDescriptor","operator":2,"propertyPath":"tradingStatus","ignoreCase":false,"value":0},{"condition":1,"type":"FilterDescriptor","operator":2,"propertyPath":"processStatus","ignoreCase":false,"value":0}]},{"condition":0,"type":"FilterGroupDescriptor","filters":[{"condition":1,"type":"FilterGroupDescriptor","filters":[{"condition":0,"type":"FilterDescriptor","operator":4,"propertyPath":"holiday","ignoreCase":false,"value":1825},{"condition":0,"type":"FilterDescriptor","operator":0,"propertyPath":"holiday","ignoreCase":false,"value":2555}]},{"condition":1,"type":"FilterGroupDescriptor","filters":[{"condition":0,"type":"FilterDescriptor","operator":4,"propertyPath":"holiday","ignoreCase":false,"value":2555},{"condition":0,"type":"FilterDescriptor","operator":0,"propertyPath":"holiday","ignoreCase":false,"value":3650}]}]},{"condition":0,"type":"FilterDescriptor","operator":5,"propertyPath":"holiday","ignoreCase":false,"value":0}],"sorts":[{"direction":1,"type":"SortDescriptor","propertyPath":"updateTime"},{"direction":1,"type":"SortDescriptor","propertyPath":"id"}]}`,
       jsonTreeNodes: [],
       expressionTreeNodes: []
     };
@@ -81,10 +62,10 @@ class Converter extends React.Component<{}, ConverterState> {
         <div className="right-area">
           <Tabs defaultActiveKey="1">
             <TabPane tab="Expression Tree" key="1">
-              <Tree>{this.renderNode(this.state.expressionTreeNodes)}</Tree>
+              <Tree showLine>{this.renderNode(this.state.expressionTreeNodes)}</Tree>
             </TabPane>
             <TabPane tab="JSON Tree" key="2">
-              <Tree>{this.renderNode(this.state.jsonTreeNodes)}</Tree>
+              <Tree showLine>{this.renderNode(this.state.jsonTreeNodes)}</Tree>
             </TabPane>
           </Tabs>
         </div>
